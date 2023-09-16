@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import dayjs from "dayjs";
 
 type CountDownProps = {
@@ -13,9 +13,9 @@ const CountDown = ({ futureTimeStampInMs }: CountDownProps) => {
     seconds: "00",
   });
 
-  const trackUpdatedTime = () => {
+  const trackUpdatedTime = (val: number) => {
     const currentTime = dayjs();
-    const futureTime = dayjs(futureTimeStampInMs);
+    const futureTime = dayjs(val);
 
     const countDownTimeInSeconds = futureTime.diff(currentTime, "seconds") % 60;
     const countDownTimeInMinutes = futureTime.diff(currentTime, "minutes") % 60;
@@ -30,11 +30,14 @@ const CountDown = ({ futureTimeStampInMs }: CountDownProps) => {
   };
 
   useEffect(() => {
-    const interval = setInterval(trackUpdatedTime, 1000);
+    const interval = setInterval(() => {
+      trackUpdatedTime(futureTimeStampInMs);
+    }, 1000);
+
     return () => {
       clearInterval(interval);
     };
-  }, []);
+  }, [futureTimeStampInMs]);
 
   return (
     <div className="container">
